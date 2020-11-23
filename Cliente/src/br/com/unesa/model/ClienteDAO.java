@@ -17,18 +17,18 @@ import java.sql.Statement;
  * @date 23/11/2020
  *
  */
-public class ClienteDAO {
+public class ClienteDAO extends Cliente {
 
     private Connection getConnection() throws ClassNotFoundException, SQLException {
         Class.forName("org.apache.derby.jdbc.ClientDriver");
-        return DriverManager.getConnection("jdbc:derby://localhost:1527/Cadastro", "MJVG", "MJVG");
+        return DriverManager.getConnection("jdbc:derby://localhost:1527/JGM", "JGM", "JGM");
     }
 
     private void closeConnection(Connection cx) {
         try {
             cx.close();
         } catch (SQLException ex) {
-            System.out.println("Erro de exceção SQL-close");
+            System.out.println("Erro de exceção SQL-close" + ex);
         }
     }
 
@@ -37,7 +37,7 @@ public class ClienteDAO {
         try {
             cx1 = getConnection();
             PreparedStatement st = cx1.prepareStatement(
-                    "INSERT INTO CADASTRO VALUES (?, ?, ?, ?, ?)");
+                    "INSERT INTO CLIENTE VALUES (?, ?, ?, ?, ?, ?)");
             st.setInt(1, client.getId());
             st.setString(2, client.cpf);
             st.setString(3, client.nome);
@@ -46,7 +46,7 @@ public class ClienteDAO {
             st.setString(6, client.telefone);
             st.executeUpdate();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("Erro de exceção.-incluir");
+            System.out.println("Erro de exceção.-incluir" + ex);
         } finally {
             closeConnection(cx1);
         }
@@ -59,35 +59,36 @@ public class ClienteDAO {
         try {
             cx1 = getConnection();
             Statement estado = cx1.createStatement();
-            ResultSet resultado = estado.executeQuery("SELECT * FROM CADASTRO");
+            ResultSet resultado = estado.executeQuery("SELECT * FROM CLIENTE");
             while (resultado.next()) {
                 listaCliente.add(new Cliente(
                         resultado.getInt(1), resultado.getString(2), resultado.getString(3),
                         resultado.getString(4), resultado.getString(5), resultado.getString(6)));
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("Erro de exceção.-listar");
+            System.out.println("Erro de exceção.-listar" + ex);
         } finally {
             closeConnection(cx1);
         }
         return listaCliente;
     }
 
-    public List<Cliente> buscar() {
+    public List<Cliente> buscar(int id) {
         ArrayList<Cliente> buscarCliente = new ArrayList();
         Connection cx1 = null;
 
         try {
             cx1 = getConnection();
             Statement estado = cx1.createStatement();
-            ResultSet resultado = estado.executeQuery("SELECT ID FROM CADASTRO");
+            ResultSet resultado = estado.executeQuery("SELECT * FROM CLIENTE WHERE id = ?");
+            resultado.setFetchDirection(id);
             while (resultado.next()) {
                 buscarCliente.add(new Cliente(
                         resultado.getInt(1), resultado.getString(2), resultado.getString(3),
-                        resultado.getString(4), resultado.getString(5)));
+                        resultado.getString(4), resultado.getString(5), resultado.getString(6)));
             }
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("Erro de exceção.-Buscar");
+            System.out.println("Erro de exceção.-Buscar" + ex);
         } finally {
             closeConnection(cx1);
         }
@@ -99,16 +100,16 @@ public class ClienteDAO {
         try {
             cx1 = getConnection();
             PreparedStatement st = cx1.prepareStatement(
-                    "UPTADE CADASTRO SET CPF=?, NOME=?, IDADE=?, EMAIL=?, TELEFONE=? WHERE ID=?");
-
+                    "UPTADE CLIENTE SET cpf=?, nome=?, idade=?, email=?, telefone=? WHERE id=?");
             st.setString(1, client.getCpf());
             st.setString(2, client.getNome());
             st.setString(3, client.getIdade());
             st.setString(4, client.getEmail());
-            st.setInt(9, client.getId());
+            st.setString(5, client.getTelefone());
+            st.setInt(6, client.getId());
             st.executeUpdate();
         } catch (ClassNotFoundException | SQLException ex) {
-            System.out.println("Erro de exceção.-alterar");
+            System.out.println("Erro de exceção.-alterar" + ex);
         } finally {
             closeConnection(cx1);
         }

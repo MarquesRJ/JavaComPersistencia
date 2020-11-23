@@ -17,9 +17,7 @@ public class Cliente {
     public String email;
     public String telefone;
 
-    public Cliente(){
-    
-    }
+    public Cliente(){}
     
     public Cliente(int id, String cpf, String nome, String idade, String email, String telefone) {
         
