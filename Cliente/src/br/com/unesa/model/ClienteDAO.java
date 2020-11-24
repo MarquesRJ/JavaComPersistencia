@@ -51,6 +51,21 @@ public class ClienteDAO extends Cliente {
             closeConnection(cx1);
         }
     }
+    
+    public void excluir(Cliente client){
+        Connection cx1 = null;
+        try{
+            cx1 = getConnection();
+            PreparedStatement st = cx1.prepareStatement(
+                    "DELETE FROM CLIENTE WHERE ID = ?");
+            st.setInt(1, client.getId());
+            st.executeUpdate();
+        }catch(ClassNotFoundException | SQLException ex){
+            System.out.println("Erro de exceção.-excluir" + ex);
+        }finally{
+            closeConnection(cx1);
+        }
+    }
 
     public List<Cliente> listar() {
         ArrayList<Cliente> listaCliente = new ArrayList();
@@ -73,7 +88,7 @@ public class ClienteDAO extends Cliente {
         return listaCliente;
     }
 
-    public List<Cliente> buscar(int id) {
+    public List<Cliente> buscar() {
         ArrayList<Cliente> buscarCliente = new ArrayList();
         Connection cx1 = null;
 
@@ -81,7 +96,6 @@ public class ClienteDAO extends Cliente {
             cx1 = getConnection();
             Statement estado = cx1.createStatement();
             ResultSet resultado = estado.executeQuery("SELECT * FROM CLIENTE WHERE id = ?");
-            resultado.setFetchDirection(id);
             while (resultado.next()) {
                 buscarCliente.add(new Cliente(
                         resultado.getInt(1), resultado.getString(2), resultado.getString(3),
@@ -100,13 +114,13 @@ public class ClienteDAO extends Cliente {
         try {
             cx1 = getConnection();
             PreparedStatement st = cx1.prepareStatement(
-                    "UPTADE CLIENTE SET cpf=?, nome=?, idade=?, email=?, telefone=? WHERE id=?");
-            st.setString(1, client.getCpf());
-            st.setString(2, client.getNome());
-            st.setString(3, client.getIdade());
-            st.setString(4, client.getEmail());
-            st.setString(5, client.getTelefone());
-            st.setInt(6, client.getId());
+                    "UPDATE CLIENTE SET cpf=?, nome=?, idade=?, email=?, telefone=? WHERE id=?");
+            st.setInt(1, client.getId());
+            st.setString(2, client.getCpf());
+            st.setString(3, client.getNome());
+            st.setString(4, client.getIdade());
+            st.setString(5, client.getEmail());
+            st.setString(6, client.getTelefone());
             st.executeUpdate();
         } catch (ClassNotFoundException | SQLException ex) {
             System.out.println("Erro de exceção.-alterar" + ex);

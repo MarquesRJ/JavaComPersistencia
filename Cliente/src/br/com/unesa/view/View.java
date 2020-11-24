@@ -45,7 +45,7 @@ public class View extends javax.swing.JFrame {
         jLabel12 = new javax.swing.JLabel();
         caixaid = new javax.swing.JTextField();
         caixanome = new javax.swing.JTextField();
-        listarpainel = new javax.swing.JPanel();
+        btexcluir = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -109,16 +109,12 @@ public class View extends javax.swing.JFrame {
         jLabel12.setForeground(new java.awt.Color(255, 255, 204));
         jLabel12.setText("ID:");
 
-        javax.swing.GroupLayout listarpainelLayout = new javax.swing.GroupLayout(listarpainel);
-        listarpainel.setLayout(listarpainelLayout);
-        listarpainelLayout.setHorizontalGroup(
-            listarpainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 189, Short.MAX_VALUE)
-        );
-        listarpainelLayout.setVerticalGroup(
-            listarpainelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 70, Short.MAX_VALUE)
-        );
+        btexcluir.setText("Excluir");
+        btexcluir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btexcluirActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -154,8 +150,9 @@ public class View extends javax.swing.JFrame {
                                     .addComponent(jLabel5))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                    .addComponent(btcadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
+                                    .addComponent(btexcluir, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                                     .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                        .addComponent(btcadastro, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                                         .addComponent(caixatelefone, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                                         .addComponent(caixaemail, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
                                         .addComponent(caixaidade, javax.swing.GroupLayout.DEFAULT_SIZE, 106, Short.MAX_VALUE)
@@ -166,10 +163,7 @@ public class View extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addComponent(bteditar)
                         .addGap(18, 18, 18)
-                        .addComponent(btlistar))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGap(29, 29, 29)
-                        .addComponent(listarpainel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(btlistar)))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
@@ -208,9 +202,9 @@ public class View extends javax.swing.JFrame {
                     .addComponent(jLabel6))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                 .addComponent(btcadastro)
-                .addGap(18, 18, 18)
-                .addComponent(listarpainel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addGap(26, 26, 26)
+                .addGap(31, 31, 31)
+                .addComponent(btexcluir)
+                .addGap(60, 60, 60)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(bteditar)
                     .addComponent(btbuscar)
@@ -259,27 +253,21 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_btcadastroActionPerformed
 
     private void btbuscarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btbuscarActionPerformed
-
-        String op;
-
-        op = JOptionPane.showInputDialog("Bem-vindo!\n Digite a letra b para busca o cliente pelo id:");
-        if (op.equalsIgnoreCase("b")) {
-            controle.buscar(Integer.parseInt(JOptionPane.showInputDialog("Digite o id do Cliente:")));
-        } else {
-            JOptionPane.showMessageDialog(rootPane, "Opção inválida, tente novamente");
-        }
+        controle.buscar().forEach((cliente) -> {
+            JOptionPane.showMessageDialog(rootPane, "id: " + cliente.getId() + ", Cpf: " + cliente.getCpf() + ", Nome: " + cliente.getNome() + ", Idade: " + cliente.getIdade() + ", Email: "
+                    + cliente.getEmail() + ", Telefone: " + cliente.getTelefone());
+        });
     }//GEN-LAST:event_btbuscarActionPerformed
 
     private void bteditarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bteditarActionPerformed
-
+        controle.alterar(cliente);
         cliente.setId(Integer.parseInt(caixaid.getText()));
         cliente.setCpf(caixacpf.getText());
         cliente.setNome(caixanome.getText());
         cliente.setIdade(caixaidade.getText());
         cliente.setEmail(caixaemail.getText());
         cliente.setTelefone(caixatelefone.getText());
-        controle.alterar(cliente);
-
+          
         JOptionPane.showMessageDialog(rootPane, "Atualização feita com sucesso!");
 
         caixaid.setText("");
@@ -292,11 +280,32 @@ public class View extends javax.swing.JFrame {
     }//GEN-LAST:event_bteditarActionPerformed
 
     private void btlistarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btlistarActionPerformed
-          controle.ObterListar().forEach((cliente) -> {
-            JOptionPane.showMessageDialog(rootPane, cliente.getId() + ", " + cliente.getCpf() + ", " + cliente.getNome() + ", " + cliente.getIdade() + ", "
-                    + cliente.getEmail() + ", " + cliente.getTelefone());
+        controle.ObterListar().forEach((cliente) -> {
+            JOptionPane.showMessageDialog(rootPane, "id: " + cliente.getId() + ", Cpf: " + cliente.getCpf() + ", Nome: " + cliente.getNome() + ", Idade: " + cliente.getIdade() + ", Email: "
+                    + cliente.getEmail() + ", Telefone: " + cliente.getTelefone());
         });
     }//GEN-LAST:event_btlistarActionPerformed
+
+    private void btexcluirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btexcluirActionPerformed
+
+        cliente.setId(Integer.parseInt(JOptionPane.showInputDialog(rootPane, "Qual ID a ser deletada?: ")));
+
+        int resposta = 0;
+
+        resposta = JOptionPane.showConfirmDialog(rootPane, "Deseja Realmente Excluir?");
+
+        if (resposta == JOptionPane.YES_OPTION) {
+
+            controle.excluir(cliente);
+
+            JOptionPane.showMessageDialog(rootPane, "Cliente excluido com sucesso!");
+
+        } else {
+
+            JOptionPane.showMessageDialog(rootPane, "Retorne as Opções!");
+
+        }
+    }//GEN-LAST:event_btexcluirActionPerformed
 
     /**
      * @param args the command line arguments
@@ -337,6 +346,7 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JButton btbuscar;
     private javax.swing.JButton btcadastro;
     private javax.swing.JButton bteditar;
+    private javax.swing.JButton btexcluir;
     private javax.swing.JButton btlistar;
     private javax.swing.JTextField caixacpf;
     private javax.swing.JTextField caixaemail;
@@ -355,6 +365,5 @@ public class View extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JPanel jPanel1;
-    private javax.swing.JPanel listarpainel;
     // End of variables declaration//GEN-END:variables
 }
