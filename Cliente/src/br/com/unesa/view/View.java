@@ -8,7 +8,7 @@ import javax.swing.JOptionPane;
  * @author Jonas Silva Carvalho<jonasloop1@gmail.com>
  * @author Gabriel Henrique Santos Marques<gabrielmarques142@gmail.com>
  * @author Marlon Ribeiro da Silva<marlonribeirodasilva@outlook.com.br>
- * @brief Camada View - Interface com o usuário
+ * @brief Camada View - Interface com o usuário.
  * @date 23/11/2020.
  */
 public class View extends javax.swing.JFrame {
